@@ -1,9 +1,12 @@
 package it.polito.tdp.seriea;
 
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import it.polito.tdp.seriea.model.Model;
+import it.polito.tdp.seriea.model.Squadre;
+import it.polito.tdp.seriea.model.Team;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -23,7 +26,7 @@ public class FXMLController {
     private URL location;
 
     @FXML
-    private ChoiceBox<?> boxSquadra;
+    private ChoiceBox<Team> boxSquadra;
 
     @FXML
     private ChoiceBox<?> boxStagione;
@@ -42,12 +45,31 @@ public class FXMLController {
 
     @FXML
     void doAnalizzaSquadre(ActionEvent event) {
+    	txtResult.clear();
+    	
+    	this.model.creaGrafo();
+    	txtResult.appendText("Grafo creato\n");
+    	txtResult.appendText("#Vertici: "+ this.model.nVertici()+"\n");
+    	txtResult.appendText("#Archi: "+ this.model.nArchi()+"\n");
 
+    	this.boxSquadra.getItems().addAll(this.model.getTeam());
     }
 
     @FXML
     void doCalcolaConnessioniSquadra(ActionEvent event) {
+    	txtResult.clear();
+    	Team t= this.boxSquadra.getValue();
 
+    	if(t==null) {
+    		txtResult.appendText("Devi selezionare una squadra");
+    	}
+    	
+    	List<Squadre> vicini= this.model.getVicini(t);
+    	
+    	txtResult.appendText("Squadre avversarie di"+ t+"\n");
+    	for(Squadre s: vicini) {
+    		txtResult.appendText(s.toString()+"\n");
+    	}
     }
 
     @FXML
