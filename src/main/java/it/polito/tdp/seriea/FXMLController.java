@@ -1,9 +1,12 @@
 package it.polito.tdp.seriea;
 
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
+import it.polito.tdp.seriea.model.Connessione;
 import it.polito.tdp.seriea.model.Model;
+import it.polito.tdp.seriea.model.Season;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -23,7 +26,7 @@ public class FXMLController {
     private URL location;
 
     @FXML
-    private ChoiceBox<?> boxSquadra;
+    private ChoiceBox<Season> boxSquadra;
 
     @FXML
     private Button btnCalcolaConnessioniSquadra;
@@ -39,11 +42,35 @@ public class FXMLController {
 
     @FXML
     void doAnalizzaStagioni(ActionEvent event) {
+    	txtResult.clear();
+    	
+    	this.model.creaGrafo();
+    	txtResult.appendText("Grafo creato\n");
+    	txtResult.appendText("#vertici: "+ this.model.nVertici()+"\n");
+    	txtResult.appendText("#archi: "+ this.model.nArchi()+"\n");
 
+    	this.boxSquadra.getItems().addAll(this.model.getStagioni());
+    	
     }
 
     @FXML
     void doCalcolaConnessioniStagione(ActionEvent event) {
+    	txtResult.clear();
+    	
+    	Season s= this.boxSquadra.getValue();
+    	
+    	if(s==null) {
+    		txtResult.appendText("Devi selezionare una stagione\n");
+    		return;
+    	}
+    	
+    	List<Connessione> c= this.model.getVicini(s);
+    	
+    	txtResult.appendText("Stagioni con squadre comuni a "+ s+"\n");
+    	for(Connessione cc: c) {
+    		txtResult.appendText(cc.toString()+"\n");
+    	}
+    	
 
     }
 
